@@ -10,10 +10,10 @@ app.use(morgan('dev'));
 
 // PostgreSQL Connection
 const pool = new Pool({
-  host: 'localhost',     // Update with the IP address or hostname of your PostgreSQL server
-  user: 'your_username', // Update with your PostgreSQL username
-  password: 'your_password', // Update with your PostgreSQL password
-  database: 'test',
+  host: '',     // Update with the IP address or hostname of your PostgreSQL server
+  user: 'eta-sandbox-user', // Update with your PostgreSQL username
+  password: 'pass', // Update with your PostgreSQL password
+  database: 'eta-sandbox',
   port: 5432,            // Default PostgreSQL port
 });
 
@@ -49,5 +49,5 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Start the server
 app.listen(port, '0.0.0.0', () => {
-  console.log(Server running on port ${port});
+  console.log(`Server running on port ${port}`);
 });
