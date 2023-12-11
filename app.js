@@ -10,9 +10,9 @@ app.use(morgan('dev'));
 
 // PostgreSQL Connection
 const pool = new Pool({
-  host: '',     // Update with the IP address or hostname of your PostgreSQL server
+  host: '10.139.150.2',     // Update with the IP address or hostname of your PostgreSQL server
   user: 'eta-sandbox-user', // Update with your PostgreSQL username
-  password: 'pass', // Update with your PostgreSQL password
+  password: 'password', // Update with your PostgreSQL password
   database: 'eta-sandbox',
   port: 5432,            // Default PostgreSQL port
 });
@@ -22,6 +22,37 @@ app.use(express.json());
 
 // Serve static files from the public_html directory
 app.use(express.static(path.join(__dirname, 'public_html')));
+
+// Middleware to parse URL-encoded form data
+app.use(express.urlencoded({ extended: true }));
+
+pool.connect((err) => {
+  if (err) {
+    console.error('PostgreSQL connection failed: ' + err.stack);
+    return;
+  }
+  console.log('Connected to PostgreSQL');
+
+
+// Create "expenses" table if it doesn't exist
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS expenses (
+      id SERIAL PRIMARY KEY,
+      category VARCHAR(255) NOT NULL,
+      amount NUMERIC NOT NULL,
+      date DATE NOT NULL,
+      description TEXT
+    );
+  `;
+  
+  pool.query(createTableQuery, (createTableErr, result) => {
+    if (createTableErr) {
+      console.error('Error creating "expenses" table: ' + createTableErr.stack);
+    } else {
+      console.log('Created "expenses" table');
+    }
+  });
+});
 
 // Route to handle adding an expense
 app.post('/addExpense', async (req, res) => {
