@@ -2,7 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
 const morgan = require('morgan');
-
+require('dotenv').config();
 const app = express();
 const port = 3000;
 
@@ -10,11 +10,11 @@ app.use(morgan('dev'));
 
 // PostgreSQL Connection
 const pool = new Pool({
-  host: '10.139.150.2',     // Update with the IP address or hostname of your PostgreSQL server
-  user: 'eta-sandbox-user', // Update with your PostgreSQL username
-  password: 'password', // Update with your PostgreSQL password
-  database: 'eta-sandbox',
-  port: 5432,            // Default PostgreSQL port
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD, // Store your all credentials in enviroment variables (.env file.)
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT,
 });
 
 // Middleware to parse JSON
